@@ -6,6 +6,7 @@ const baseColor = {
   grey3: '#F2F2F2',
   white: '#ffffff',
   green: '#1ABC9C',
+  danger: '#D9435E',
 };
 
 export const colors = {
@@ -19,6 +20,8 @@ export const colors = {
     backgroundPrimary: baseColor.primary,
     textSecondary: baseColor.white,
     backgroundSecondary: baseColor.grey,
+    textDanger: baseColor.white,
+    backgroundDanger: baseColor.danger,
   },
   border: baseColor.black,
 };

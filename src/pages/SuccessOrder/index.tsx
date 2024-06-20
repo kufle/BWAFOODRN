@@ -44,7 +44,7 @@ const SuccessOrder = ({navigation}: Props) => {
               routes: [{name: 'MainApp', state: {routes: [{name: 'Order'}]}}],
             })
           }
-          secondary
+          variant="secondary"
         />
       </View>
     </View>

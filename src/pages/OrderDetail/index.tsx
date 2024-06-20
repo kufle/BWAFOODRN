@@ -2,8 +2,8 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Header, ItemListFood, ItemValue} from '../../components/molecules';
-import {Button, Gap} from '../../components';
 import {colors, fonts} from '../../utils';
+import {Button, Gap} from '../../components';
 
 type RootStackParamList = {
   SuccessOrder: undefined;
@@ -13,7 +13,7 @@ type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
 };
 
-const OrderSummary = ({navigation}: Props) => {
+const OrderDetail = ({navigation}: Props) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Header
@@ -21,6 +21,7 @@ const OrderSummary = ({navigation}: Props) => {
         description="You deserve better meal"
         onPress={() => {}}
       />
+
       <View style={styles.content}>
         <Text style={styles.label}>Item Ordered</Text>
         <ItemListFood type="order-summary" items={3} />
@@ -44,10 +45,16 @@ const OrderSummary = ({navigation}: Props) => {
         <ItemValue label="City" value="Cimahi" />
       </View>
 
+      <View style={styles.content}>
+        <Text style={styles.label}>Order Status:</Text>
+        <ItemValue label="#FM00001" value="Paid" valueColor={colors.green} />
+      </View>
+
       <View style={styles.buttonContainer}>
         <Button
-          label="Checkout Now"
+          label="Cancel Order"
           onPress={() => navigation.navigate('SuccessOrder')}
+          variant="danger"
         />
       </View>
 
@@ -56,7 +63,7 @@ const OrderSummary = ({navigation}: Props) => {
   );
 };
 
-export default OrderSummary;
+export default OrderDetail;
 
 const styles = StyleSheet.create({
   content: {

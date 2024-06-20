@@ -16,22 +16,27 @@ const NewTaste = () => {
   return (
     <View style={styles.container}>
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
@@ -45,22 +50,27 @@ const Popular = () => {
   return (
     <View style={styles.container}>
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
@@ -74,22 +84,27 @@ const Recommended = () => {
   return (
     <View style={styles.container}>
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />
       <ItemListFood
+        type="product"
         rating={5}
         onPress={() => navigation.navigate('FoodDetail')}
       />

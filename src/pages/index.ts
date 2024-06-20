@@ -9,6 +9,7 @@ import Profile from './Profile/index';
 import FoodDetail from './FoodDetail/index';
 import OrderSummary from './OrderSummary/index';
 import SuccessOrder from './SuccessOrder/index';
+import OrderDetail from './OrderDetail/index';
 
 export {
   SplashScreen,
@@ -22,4 +23,5 @@ export {
   FoodDetail,
   OrderSummary,
   SuccessOrder,
+  OrderDetail,
 };
