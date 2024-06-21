@@ -1,16 +1,16 @@
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TextInput, TextInputProps} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 
-type Props = {
+interface CustomTextInputProp extends TextInputProps {
   label?: string;
-};
+}
 
-const Input = ({label}: Props) => {
+const Input = ({label, ...props}: CustomTextInputProp) => {
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
-      <TextInput style={styles.input} placeholder={label} />
+      <TextInput style={styles.input} placeholder={label} {...props} />
     </View>
   );
 };

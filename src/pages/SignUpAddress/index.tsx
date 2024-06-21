@@ -4,6 +4,7 @@ import {Header} from '../../components/molecules';
 import {Button, Gap, Input, Select} from '../../components';
 import {colors} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
 
 type RootStackParamList = {
   SuccessSignUp: undefined;
@@ -14,6 +15,8 @@ type Props = {
 };
 
 const SignUpAddress = ({navigation}: Props) => {
+  const registerSelect = useSelector(state => state.register);
+  console.log("addressPage", registerSelect);
   return (
     <View style={styles.pages}>
       <Header title="Address" description="Make sure it's valid" />

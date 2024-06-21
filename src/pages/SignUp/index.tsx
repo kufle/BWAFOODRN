@@ -4,6 +4,9 @@ import {Header} from '../../components/molecules';
 import {Button, Gap, Input, Link} from '../../components';
 import {colors} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useForm} from '../../hooks';
+import {useDispatch} from 'react-redux';
+import {setUserData} from '../../store/reducers/registerSlice';
 
 type RootStackParamList = {
   SignIn: undefined;
@@ -15,6 +18,23 @@ type Props = {
 };
 
 const SignUp = ({navigation}: Props) => {
+  const [form, setForm] = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+  });
+
+  const dispatch = useDispatch();
+
+  const onContinue = () => {
+    dispatch(setUserData(form));
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'SignUpAddress'}],
+    });
+  };
+
   return (
     <View style={styles.pages}>
       <Header
@@ -31,22 +51,39 @@ const SignUp = ({navigation}: Props) => {
               </View>
             </View>
           </View>
-          <Input label="Full Name" />
+          <Input
+            label="Full Name"
+            value={form.name}
+            onChangeText={val => setForm('name', val)}
+          />
           <Gap height={16} />
-          <Input label="Email Address" />
+          <Input
+            label="Email Address"
+            value={form.email}
+            onChangeText={val => setForm('email', val)}
+          />
           <Gap height={16} />
-          <Input label="Password" />
+          <Input
+            label="Password"
+            value={form.password}
+            onChangeText={val => setForm('password', val)}
+          />
           <Gap height={16} />
-          <Input label="Password Confirmation" />
+          <Input
+            label="Password Confirmation"
+            value={form.password_confirmation}
+            onChangeText={val => setForm('password_confirmation', val)}
+          />
           <Gap height={24} />
           <Button
             label="Continue"
-            onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{name: 'SignUpAddress'}],
-              })
-            }
+            // onPress={() =>
+            //   navigation.reset({
+            //     index: 0,
+            //     routes: [{name: 'SignUpAddress'}],
+            //   })
+            // }
+            onPress={onContinue}
           />
           <Gap height={24} />
           <Link
