@@ -4,6 +4,8 @@ import {IlSuccessSignUp} from '../../assets';
 import {Button, Gap} from '../../components';
 import {colors, fonts} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/index';
 
 type RootStackParamList = {
   MainApp: undefined;
@@ -14,6 +16,8 @@ type Props = {
 };
 
 const SuccessSignUp = ({navigation}: Props) => {
+  const dataRegister = useSelector((state: RootState) => state.registerForm);
+  console.log(dataRegister);
   return (
     <View style={styles.pages}>
       <IlSuccessSignUp />

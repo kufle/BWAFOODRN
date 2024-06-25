@@ -1,22 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  user: {},
+  registerForm: {},
 };
 
 const registerSlice = createSlice({
   name: 'registerSlice',
   initialState: initialState,
   reducers: {
-    setUserData(state, action) {
-      state.user = {
-        ...state.user,
+    setRegisterForm(state, action) {
+      state.registerForm = {
+        ...state.registerForm,
         ...action.payload,
       };
     },
   },
 });
 
-export const {setUserData} = registerSlice.actions;
+export const {setRegisterForm} = registerSlice.actions;
 
 export default registerSlice;

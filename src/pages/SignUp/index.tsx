@@ -6,7 +6,7 @@ import {colors} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useForm} from '../../hooks';
 import {useDispatch} from 'react-redux';
-import {setUserData} from '../../store/reducers/registerSlice';
+import {setRegisterForm} from '../../store/reducers/registerFormSlice';
 
 type RootStackParamList = {
   SignIn: undefined;
@@ -28,11 +28,8 @@ const SignUp = ({navigation}: Props) => {
   const dispatch = useDispatch();
 
   const onContinue = () => {
-    dispatch(setUserData(form));
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'SignUpAddress'}],
-    });
+    dispatch(setRegisterForm(form));
+    navigation.navigate('SignUpAddress');
   };
 
   return (
