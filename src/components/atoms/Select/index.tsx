@@ -16,8 +16,9 @@ const Select = ({label, selectedValue, onValueChange}: Props) => {
       <View style={styles.select}>
         <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
           <Picker.Item label="" />
-          <Picker.Item label="WKWK" value="wkwk" />
-          <Picker.Item label="HEHE" value="hehe" />
+          <Picker.Item label="BANDUNG" value="Bandung" />
+          <Picker.Item label="JAKARTA" value="Jakarta" />
+          <Picker.Item label="CIMAHI" value="Cimahi" />
         </Picker>
       </View>
     </View>

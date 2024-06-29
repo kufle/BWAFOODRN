@@ -1,13 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
-import counterSlice from './reducers/counterSlice';
 import registerFormSlice from './reducers/registerFormSlice';
 import authSlice from './reducers/authSlice';
+import globalSlice from './reducers/globalSlice';
 
 const store = configureStore({
   reducer: {
-    counter: counterSlice.reducer,
     registerForm: registerFormSlice.reducer,
     auth: authSlice.reducer,
+    global: globalSlice.reducer,
   },
 });
 

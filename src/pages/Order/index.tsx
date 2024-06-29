@@ -1,6 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Header, OrderTabSection} from '../../components/molecules';
+import {colors} from '../../utils';
 
 const Order = () => {
   return (
@@ -23,5 +24,6 @@ const styles = StyleSheet.create({
   tabContainer: {
     flex: 1,
     marginTop: 24,
+    backgroundColor: colors.white,
   },
 });

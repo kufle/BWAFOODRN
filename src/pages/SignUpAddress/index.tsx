@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Header} from '../../components/molecules';
 import {Button, Gap, Input, Select} from '../../components';
@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setRegisterForm} from '../../store/reducers/registerFormSlice';
 import {registerUser} from '../../store/reducers/authSlice';
 import {AppDispatch, RootState} from '../../store';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 type RootStackParamList = {
   SuccessSignUp: undefined;
@@ -39,6 +39,7 @@ const SignUpAddress = ({navigation}: Props) => {
       const data = {
         ...form,
         ...registerFormReducer.registerForm,
+        photoForm: {...registerFormReducer.photoForm},
       };
       await dispatch(registerUser(data)).unwrap();
       navigation.reset({

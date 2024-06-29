@@ -3,14 +3,22 @@ import React, {useState} from 'react';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {colors, fonts} from '../../../utils';
 import {ItemListMenu} from '../../molecules';
+import {useDispatch} from 'react-redux';
+import {logoutUser} from '../../../store/reducers/authSlice';
+import {AppDispatch} from '../../../store';
 
 const Account = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const logout = () => {
+    dispatch(logoutUser());
+  };
   return (
     <View style={styles.container}>
       <ItemListMenu text="Edit Profile" />
       <ItemListMenu text="Home Address" />
       <ItemListMenu text="Security" />
       <ItemListMenu text="Payments" />
+      <ItemListMenu text="Sign Out" onPress={logout} />
     </View>
   );
 };

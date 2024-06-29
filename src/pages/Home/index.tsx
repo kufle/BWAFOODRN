@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FoodDummy1, FoodDummy2, FoodDummy3} from '../../assets';
 import {Gap} from '../../components';
 import {
@@ -7,8 +7,13 @@ import {
   HomeProfile,
   HomeTabSection,
 } from '../../components/molecules';
+import {getData} from '../../utils';
 
 const Home = () => {
+  useEffect(() => {
+    getData('user').then(user => console.log(user));
+    getData('token').then(token => console.log(token));
+  }, []);
   return (
     <View style={styles.pages}>
       <ScrollView>

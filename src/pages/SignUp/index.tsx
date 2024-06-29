@@ -1,12 +1,25 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useState} from 'react';
 import {Header} from '../../components/molecules';
 import {Button, Gap, Input, Link} from '../../components';
 import {colors} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useForm} from '../../hooks';
 import {useDispatch} from 'react-redux';
-import {setRegisterForm} from '../../store/reducers/registerFormSlice';
+import {
+  setPhotoForm,
+  setRegisterForm,
+  setStatusUpload,
+} from '../../store/reducers/registerFormSlice';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {showMessage} from 'react-native-flash-message';
 
 type RootStackParamList = {
   SignIn: undefined;
@@ -18,6 +31,7 @@ type Props = {
 };
 
 const SignUp = ({navigation}: Props) => {
+  const [photo, setPhoto] = useState('');
   const [form, setForm] = useForm({
     name: '',
     email: '',
@@ -32,6 +46,34 @@ const SignUp = ({navigation}: Props) => {
     navigation.navigate('SignUpAddress');
   };
 
+  const addPhoto = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.5,
+      maxHeight: 200,
+      maxWidth: 200,
+    });
+    if (result.didCancel || result.errorMessage) {
+      showMessage({
+        message: 'You did not select the photo',
+        type: 'danger',
+      });
+      return false;
+    }
+
+    if (result.assets && result.assets.length > 0) {
+      const dataImage = {
+        uri: result.assets[0].uri,
+        type: result.assets[0].type,
+        name: result.assets[0].fileName,
+      };
+
+      setPhoto(dataImage.uri!);
+      dispatch(setPhotoForm(dataImage));
+      dispatch(setStatusUpload(true));
+    }
+  };
+
   return (
     <View style={styles.pages}>
       <Header
@@ -42,11 +84,17 @@ const SignUp = ({navigation}: Props) => {
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.photoContainer}>
-            <View style={styles.photoWrapper}>
-              <View style={styles.photo}>
-                <Text style={styles.photoText}>Add Photo</Text>
+            <TouchableOpacity onPress={addPhoto}>
+              <View style={styles.photoWrapper}>
+                {photo ? (
+                  <Image source={{uri: photo}} style={styles.photo} />
+                ) : (
+                  <View style={styles.photo}>
+                    <Text style={styles.photoText}>Add Photo</Text>
+                  </View>
+                )}
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
           <Input
             label="Full Name"
@@ -64,24 +112,17 @@ const SignUp = ({navigation}: Props) => {
             label="Password"
             value={form.password}
             onChangeText={val => setForm('password', val)}
+            secureTextEntry
           />
           <Gap height={16} />
           <Input
             label="Password Confirmation"
             value={form.password_confirmation}
             onChangeText={val => setForm('password_confirmation', val)}
+            secureTextEntry
           />
           <Gap height={24} />
-          <Button
-            label="Continue"
-            // onPress={() =>
-            //   navigation.reset({
-            //     index: 0,
-            //     routes: [{name: 'SignUpAddress'}],
-            //   })
-            // }
-            onPress={onContinue}
-          />
+          <Button label="Continue" onPress={onContinue} />
           <Gap height={24} />
           <Link
             label="Already have an account? Sign In"

@@ -1,18 +1,21 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {IcNext} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 type Props = {
   text: string;
+  onPress?: () => void;
 };
 
-const ItemListMenu = ({text}: Props) => {
+const ItemListMenu = ({text, onPress}: Props) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>
-      <IcNext />
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        <Text style={styles.text}>{text}</Text>
+        <IcNext />
+      </View>
+    </TouchableOpacity>
   );
 };
 

@@ -1,14 +1,18 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
+import {useDispatch} from 'react-redux';
 import {Header} from '../../components/molecules';
 import {Button, Gap, Input, Link} from '../../components';
 import {colors} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useForm} from '../../hooks';
-import axios from 'axios';
+import {loginUser} from '../../store/reducers/authSlice';
+import {AppDispatch} from '../../store';
+import {showMessage} from 'react-native-flash-message';
 
 type RootStackParamList = {
   SignUp: undefined;
+  MainApp: undefined;
 };
 
 type Props = {
@@ -21,17 +25,26 @@ const SignIn = ({navigation}: Props) => {
     password: '',
   });
 
-  const onSubmit = () => {
-    console.log(form);
-    axios
-      .post('https://food.kame.my.id/api/auth/login', form)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => {
-        console.log(e);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onSubmit = async () => {
+    try {
+      await dispatch(loginUser(form)).unwrap();
+      navigation.replace('MainApp');
+    } catch (error: any) {
+      let errMessage = '';
+      if (error?.errors) {
+        const errors = error.errors;
+        errMessage += error.message + '\n';
+        Object.keys(errors).map(key => {
+          errMessage += errors[key][0] + '\n';
+        });
+      }
+      showMessage({
+        message: errMessage,
+        type: 'danger',
       });
-    //console.log(email, password);
+    }
   };
 
   return (

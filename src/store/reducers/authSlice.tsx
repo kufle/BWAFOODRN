@@ -1,26 +1,99 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {showLoading} from './globalSlice';
+import {API_URL} from '../../config';
+import {getData, storeData} from '../../utils';
 
 interface Istate {
   user: any;
-  error: any;
+  errors: any;
 }
 
 const initialState: Istate = {
   user: {},
-  error: null,
+  errors: null,
 };
 
 export const registerUser = createAsyncThunk(
   'authSlice/register',
-  async (userData: any, {rejectWithValue}) => {
+  async (payload: any, {rejectWithValue, dispatch}) => {
+    dispatch(showLoading(true));
     try {
       const response = await axios.post(
-        'https://food.kame.my.id/api/auth/register',
-        userData,
+        `${API_URL}/api/auth/register`,
+        payload,
       );
+
+      const token = response.data.access_token;
+      const user = {...response.data.data};
+
+      //Upload Photo
+      if (payload.photoForm.isUploadPhoto) {
+        const photoForUpload = new FormData();
+        photoForUpload.append('photo', payload.photoForm);
+        const photo = await axios.post(
+          `${API_URL}/api/profiles/uploadPhoto`,
+          photoForUpload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        user.photoProfile = photo.data.data;
+      }
+      //storeData user to localStorage
+      storeData('user', user);
+      storeData('token', {value: token});
+      dispatch(showLoading(false));
       return response.data;
     } catch (error: any) {
+      dispatch(showLoading(false));
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({message: error.message});
+    }
+  },
+);
+
+export const loginUser = createAsyncThunk(
+  'authSlice/loginUser',
+  async (payload: any, {rejectWithValue, dispatch}) => {
+    dispatch(showLoading(true));
+    try {
+      const response = await axios.post(`${API_URL}/api/auth/login`, payload);
+      storeData('user', response.data.data);
+      storeData('token', {value: response.data.access_token});
+      dispatch(showLoading(false));
+      return response.data;
+    } catch (error: any) {
+      dispatch(showLoading(false));
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({message: error.message});
+    }
+  },
+);
+
+export const logoutUser = createAsyncThunk(
+  'authSlice/logoutUser',
+  async (_, {rejectWithValue, dispatch}) => {
+    try {
+      const token = await getData('token');
+      if (token) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token.value}`,
+          },
+        };
+        await axios.post(`${API_URL}/api/auth/logout`, {}, config);
+      }
+      dispatch(showLoading(false));
+    } catch (error: any) {
+      dispatch(showLoading(false));
       if (axios.isAxiosError(error) && error.response) {
         return rejectWithValue(error.response.data);
       }
@@ -35,15 +108,18 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(registerUser.pending, state => {
-        console.log('Pending');
-      })
       .addCase(registerUser.fulfilled, (state, action) => {
-        console.log('terpenuhi', action);
+        state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action: any) => {
         console.log('reject', action);
-        state.error = action.payload || action.error.message;
+        state.errors = action.payload || action.error.message;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action: any) => {
+        state.errors = action.payload || action.error.message;
       });
   },
 });
