@@ -24,3 +24,14 @@ export const getData = async (key: string) => {
     });
   }
 };
+
+export const storeRemoveMultiData = async (keys: Array<any>) => {
+  try {
+    await AsyncStorage.multiRemove(keys);
+  } catch (e) {
+    showMessage({
+      type: 'danger',
+      message: 'something went wrong',
+    });
+  }
+};

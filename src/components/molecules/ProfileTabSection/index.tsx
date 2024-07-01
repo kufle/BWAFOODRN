@@ -1,16 +1,48 @@
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {showMessage} from 'react-native-flash-message';
+import {useDispatch} from 'react-redux';
 import {colors, fonts} from '../../../utils';
 import {ItemListMenu} from '../../molecules';
-import {useDispatch} from 'react-redux';
 import {logoutUser} from '../../../store/reducers/authSlice';
 import {AppDispatch} from '../../../store';
 
+type RootStackParamList = {
+  SignIn: undefined;
+};
+
 const Account = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
-  const logout = () => {
-    dispatch(logoutUser());
+  const logout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'SignIn'}],
+      });
+    } catch (error: any) {
+      let errMessage = '';
+      errMessage += error.message + '\n';
+      if (error?.errors) {
+        const errors = error.errors;
+        Object.keys(errors).map(key => {
+          errMessage += errors[key][0] + '\n';
+        });
+      }
+      showMessage({
+        message: errMessage,
+        type: 'danger',
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'SignIn'}],
+      });
+    }
   };
   return (
     <View style={styles.container}>

@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Logo} from '../../assets';
-import {colors, fonts} from '../../utils';
+import {colors, fonts, getData} from '../../utils';
 import {Gap} from '../../components';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   SignIn: undefined;
+  MainApp: undefined;
 };
 
 type Props = {
@@ -16,7 +17,13 @@ type Props = {
 const SplashScreen = ({navigation}: Props) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('SignIn');
+      getData('token').then(token => {
+        if (token) {
+          navigation.reset({index: 0, routes: [{name: 'MainApp'}]});
+        } else {
+          navigation.replace('SignIn');
+        }
+      });
     }, 2000);
   }, [navigation]);
 

@@ -2,12 +2,14 @@ import {configureStore} from '@reduxjs/toolkit';
 import registerFormSlice from './reducers/registerFormSlice';
 import authSlice from './reducers/authSlice';
 import globalSlice from './reducers/globalSlice';
+import homeSlice from './reducers/homeSlice';
 
 const store = configureStore({
   reducer: {
     registerForm: registerFormSlice.reducer,
     auth: authSlice.reducer,
     global: globalSlice.reducer,
+    home: homeSlice.reducer,
   },
 });
 

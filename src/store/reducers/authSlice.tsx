@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {showLoading} from './globalSlice';
 import {API_URL} from '../../config';
-import {getData, storeData} from '../../utils';
+import {getData, storeData, storeRemoveMultiData} from '../../utils';
 
 interface Istate {
   user: any;
@@ -81,16 +81,17 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   'authSlice/logoutUser',
   async (_, {rejectWithValue, dispatch}) => {
+    dispatch(showLoading(true));
     try {
       const token = await getData('token');
-      if (token) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token.value}`,
-          },
-        };
-        await axios.post(`${API_URL}/api/auth/logout`, {}, config);
-      }
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      };
+      await axios.post(`${API_URL}/api/auth/logout`, {}, config);
+
+      storeRemoveMultiData(['user', 'token']);
       dispatch(showLoading(false));
     } catch (error: any) {
       dispatch(showLoading(false));
@@ -105,20 +106,31 @@ export const logoutUser = createAsyncThunk(
 const authSlice = createSlice({
   name: 'authSlice',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    reset(state) {
+      state.user = {};
+      state.errors = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action: any) => {
-        console.log('reject', action);
+        //console.log('reject', action);
         state.errors = action.payload || action.error.message;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action: any) => {
+        state.errors = action.payload || action.error.message;
+      })
+      .addCase(logoutUser.fulfilled, state => {
+        authSlice.caseReducers.reset(state);
+      })
+      .addCase(logoutUser.rejected, (state, action: any) => {
         state.errors = action.payload || action.error.message;
       });
   },

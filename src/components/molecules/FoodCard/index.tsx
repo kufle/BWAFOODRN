@@ -2,18 +2,21 @@ import {Image, ImageProps, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 import {StarRating} from '../../molecules';
+import {FoodDummy1} from '../../../assets';
 
 type Props = {
-  image: ImageProps;
+  name?: string;
+  rate: string;
+  image?: ImageProps;
 };
 
-const FoodCard = ({image}: Props) => {
+const FoodCard = ({name, image, rate}: Props) => {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={image} />
+      <Image style={styles.image} source={image ? {uri: image} : FoodDummy1} />
       <View style={styles.detail}>
-        <Text style={styles.text}>Cherry Healty</Text>
-        <StarRating />
+        <Text style={styles.text}>{name}</Text>
+        <StarRating rate={rate} />
       </View>
     </View>
   );
@@ -32,7 +35,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
     overflow: 'hidden',
-    marginRight: 24,
+    marginHorizontal: 12,
   },
   image: {
     resizeMode: 'cover',

@@ -1,10 +1,19 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {colors, fonts} from '../../../utils';
 import {ItemListFood} from '../../molecules';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../../store';
+import {getFoodsByTypes} from '../../../store/reducers/homeSlice';
 
 type RootStackParamList = {
   FoodDetail: undefined;
@@ -13,22 +22,23 @@ type RootStackParamList = {
 const NewTaste = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch<AppDispatch>();
+  const {newTaste} = useSelector((state: RootState) => state.home);
+  console.log(newTaste);
+  useEffect(() => {
+    dispatch(getFoodsByTypes('new'));
+  }, [dispatch]);
   return (
     <View style={styles.container}>
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
+      <FlatList
+        data={[1]}
+        renderItem={() => (
+          <ItemListFood
+            type="product"
+            rating={5}
+            onPress={() => navigation.navigate('FoodDetail')}
+          />
+        )}
       />
       <ItemListFood
         type="product"
