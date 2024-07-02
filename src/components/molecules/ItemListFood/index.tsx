@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageProps,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {StarRating} from '../../molecules';
 import {colors, fonts} from '../../../utils';
@@ -15,30 +22,32 @@ type TypePage = 'product' | 'order-summary' | 'in-progress' | 'past-orders';
 
 type Props = {
   type: TypePage;
+  name: string;
   onPress?: () => void;
-  rating?: number;
+  rate?: string;
   items?: number;
-  price?: string;
+  price: string;
+  image?: ImageProps;
 };
 
-const Food = ({type, items, price}: Props) => {
+const Food = ({type, name, rate = '0', items, price}: Props) => {
   switch (type) {
     case 'product':
       return (
         <>
           <View style={styles.textContainer}>
-            <Text style={styles.productName}>Bubur Mang</Text>
-            <Text style={styles.productPrice}>IDR 10.000</Text>
+            <Text style={styles.productName}>{name}</Text>
+            <Text style={styles.productPrice}>IDR {price}</Text>
           </View>
-          <StarRating />
+          <StarRating rate={rate} />
         </>
       );
     case 'order-summary':
       return (
         <>
           <View style={styles.textContainer}>
-            <Text style={styles.productName}>Bubur Mang</Text>
-            <Text style={styles.productPrice}>IDR 10.000</Text>
+            <Text style={styles.productName}>{name}</Text>
+            <Text style={styles.productPrice}>IDR {price}</Text>
           </View>
           <Text style={styles.itemText}>{items} items</Text>
         </>
@@ -46,7 +55,7 @@ const Food = ({type, items, price}: Props) => {
     case 'in-progress':
       return (
         <View style={styles.textContainer}>
-          <Text style={styles.productName}>Bubur Mang</Text>
+          <Text style={styles.productName}>{name}</Text>
           <Text style={styles.productPrice}>
             {items} items . IDR {price}
           </Text>
@@ -56,7 +65,7 @@ const Food = ({type, items, price}: Props) => {
       return (
         <>
           <View style={styles.textContainer}>
-            <Text style={styles.productName}>Bubur Mang</Text>
+            <Text style={styles.productName}>{name}</Text>
             <Text style={styles.productPrice}>
               {items} items . IDR {price}
             </Text>
@@ -71,21 +80,32 @@ const Food = ({type, items, price}: Props) => {
       return (
         <>
           <View style={styles.textContainer}>
-            <Text style={styles.productName}>Bubur Mang</Text>
-            <Text style={styles.productPrice}>IDR 10.000</Text>
+            <Text style={styles.productName}>{name}</Text>
+            <Text style={styles.productPrice}>IDR {price}</Text>
           </View>
-          <StarRating />
+          <StarRating rate={rate} />
         </>
       );
   }
 };
 
-const ItemListFood = ({type, onPress, rating, items, price}: Props) => {
+const ItemListFood = ({
+  type,
+  name,
+  image,
+  onPress,
+  rate,
+  items,
+  price,
+}: Props) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <View style={styles.foodContainer}>
-        <Image style={styles.image} source={FoodDummy1} />
-        <Food type={type} rating={rating} items={items} price={price} />
+        <Image
+          style={styles.image}
+          source={image ? {uri: image} : FoodDummy1}
+        />
+        <Food name={name} type={type} rate={rate} items={items} price={price} />
       </View>
     </TouchableOpacity>
   );

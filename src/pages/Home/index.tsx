@@ -1,6 +1,7 @@
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   FoodCard,
   HomeProfile,
@@ -9,13 +10,22 @@ import {
 import {AppDispatch, RootState} from '../../store';
 import {getFoods} from '../../store/reducers/homeSlice';
 
-const Home = () => {
+type RootStackParamList = {
+  FoodDetail: undefined;
+};
+
+interface Props {
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+}
+
+const Home = ({navigation}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const {foods} = useSelector((state: RootState) => state.home);
+  const {foods}: any = useSelector((state: RootState) => state.home);
 
   useEffect(() => {
     dispatch(getFoods());
   }, [dispatch]);
+
   return (
     <View style={styles.pages}>
       <ScrollView>
@@ -33,18 +43,11 @@ const Home = () => {
                   name={item.name}
                   image={item.picture_url}
                   rate={item.rate}
+                  onPress={() => navigation.navigate('FoodDetail', item)}
                 />
               </View>
             )}
           />
-          {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={styles.foodContainer}>
-              <Gap width={24} />
-              <FoodCard image={FoodDummy1} />
-              <FoodCard image={FoodDummy2} />
-              <FoodCard image={FoodDummy3} />
-            </View>
-          </ScrollView> */}
         </View>
         <View style={styles.tabContainer}>
           <HomeTabSection />

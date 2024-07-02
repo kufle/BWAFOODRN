@@ -3,14 +3,20 @@ import React from 'react';
 import {IcMin, IcPlus} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const Counter = () => {
+interface Props {
+  counter: number;
+  setCounter: (value: (val: number) => number) => void;
+}
+
+const Counter = ({counter, setCounter}: Props) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setCounter((val: number) => (val > 1 ? val - 1 : 1))}>
         <IcMin />
       </TouchableOpacity>
-      <Text style={styles.value}>5</Text>
-      <TouchableOpacity>
+      <Text style={styles.value}>{counter}</Text>
+      <TouchableOpacity onPress={() => setCounter((val: number) => val + 1)}>
         <IcPlus />
       </TouchableOpacity>
     </View>

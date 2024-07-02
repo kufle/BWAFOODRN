@@ -63,6 +63,14 @@ const homeSlice = createSlice({
         if (action.meta.arg === 'new') {
           state.newTaste = action.payload;
         }
+
+        if (action.meta.arg === 'popular') {
+          state.popular = action.payload;
+        }
+
+        if (action.meta.arg === 'recommended') {
+          state.recommended = action.payload;
+        }
       });
   },
 });

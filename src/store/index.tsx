@@ -3,6 +3,7 @@ import registerFormSlice from './reducers/registerFormSlice';
 import authSlice from './reducers/authSlice';
 import globalSlice from './reducers/globalSlice';
 import homeSlice from './reducers/homeSlice';
+import checkOutSlice from './reducers/checkOutSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     auth: authSlice.reducer,
     global: globalSlice.reducer,
     home: homeSlice.reducer,
+    checkout: checkOutSlice.reducer,
   },
 });
 

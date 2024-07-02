@@ -1,4 +1,11 @@
-import {Image, ImageProps, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  ImageProps,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 import {StarRating} from '../../molecules';
@@ -8,17 +15,21 @@ type Props = {
   name?: string;
   rate: string;
   image?: ImageProps;
+  onPress?: () => void;
 };
 
-const FoodCard = ({name, image, rate}: Props) => {
+const FoodCard = ({name, image, rate, onPress}: Props) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.container}
+      activeOpacity={0.7}>
       <Image style={styles.image} source={image ? {uri: image} : FoodDummy1} />
       <View style={styles.detail}>
         <Text style={styles.text}>{name}</Text>
         <StarRating rate={rate} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

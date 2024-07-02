@@ -23,32 +23,28 @@ const NewTaste = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
-  const {newTaste} = useSelector((state: RootState) => state.home);
-  console.log(newTaste);
+  const {newTaste}: any = useSelector((state: RootState) => state.home);
+
   useEffect(() => {
     dispatch(getFoodsByTypes('new'));
   }, [dispatch]);
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={[1]}
-        renderItem={() => (
+        scrollEnabled={false}
+        data={newTaste.data}
+        keyExtractor={(item: any) => item.id.toString()}
+        renderItem={({item}) => (
           <ItemListFood
             type="product"
-            rating={5}
-            onPress={() => navigation.navigate('FoodDetail')}
+            rate={item.rate}
+            name={item.name}
+            price={item.price_format}
+            image={item.picture_url}
+            onPress={() => navigation.navigate('FoodDetail', item)}
           />
         )}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
       />
     </View>
   );
@@ -57,32 +53,29 @@ const NewTaste = () => {
 const Popular = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch<AppDispatch>();
+  const {popular}: any = useSelector((state: RootState) => state.home);
+
+  useEffect(() => {
+    dispatch(getFoodsByTypes('popular'));
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
+      <FlatList
+        scrollEnabled={false}
+        data={popular.data}
+        keyExtractor={(item: any) => item.id.toString()}
+        renderItem={({item}) => (
+          <ItemListFood
+            type="product"
+            rate={item.rate}
+            name={item.name}
+            price={item.price_format}
+            image={item.picture_url}
+            onPress={() => navigation.navigate('FoodDetail', item)}
+          />
+        )}
       />
     </View>
   );
@@ -91,32 +84,29 @@ const Popular = () => {
 const Recommended = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch<AppDispatch>();
+  const {recommended}: any = useSelector((state: RootState) => state.home);
+
+  useEffect(() => {
+    dispatch(getFoodsByTypes('recommended'));
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
-      />
-      <ItemListFood
-        type="product"
-        rating={5}
-        onPress={() => navigation.navigate('FoodDetail')}
+      <FlatList
+        scrollEnabled={false}
+        data={recommended.data}
+        keyExtractor={(item: any) => item.id.toString()}
+        renderItem={({item}) => (
+          <ItemListFood
+            type="product"
+            rate={item.rate}
+            name={item.name}
+            price={item.price_format}
+            image={item.picture_url}
+            onPress={() => navigation.navigate('FoodDetail', item)}
+          />
+        )}
       />
     </View>
   );

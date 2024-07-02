@@ -1,16 +1,18 @@
 import {
   ImageBackground,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {FoodDummy1, IcBackWhite} from '../../assets';
 import {Counter, StarRating} from '../../components/molecules';
 import {Button, Gap} from '../../components';
-import {colors, fonts} from '../../utils';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {colors, fonts, formatNumber, getData} from '../../utils';
 
 type RootStackParamList = {
   OrderSummary: undefined;
@@ -18,45 +20,82 @@ type RootStackParamList = {
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
+  route: RouteProp<RootStackParamList>;
 };
 
-const FoodDetail = ({navigation}: Props) => {
+const FoodDetail = ({navigation, route}: Props) => {
+  const {id, name, rate, description, ingredients, price, picture_url}: any =
+    route.params;
+  const [counter, setCounter] = useState(1);
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    getData('user').then(res => setProfile(res));
+  }, []);
+
+  const onOrder = () => {
+    const totalPrice = counter * price;
+    const driver = 5000;
+    const tax = (10 / 100) * totalPrice;
+    const total = totalPrice + driver + tax;
+    const data: any = {
+      item: {
+        id: id,
+        name: name,
+        price: price,
+        picture_url: picture_url,
+      },
+      transaction: {
+        totalItem: counter,
+        totalPrice: totalPrice,
+        driver: driver,
+        tax: tax,
+        total: total,
+      },
+      userProfile: profile,
+    };
+
+    navigation.navigate('OrderSummary', data);
+  };
+
   return (
     <View style={styles.pages}>
-      <ImageBackground source={FoodDummy1} style={styles.cover}>
-        <TouchableOpacity style={styles.back} activeOpacity={0.7}>
+      <ImageBackground
+        source={picture_url ? {uri: picture_url} : FoodDummy1}
+        style={styles.cover}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.back}
+          activeOpacity={0.7}>
           <IcBackWhite />
         </TouchableOpacity>
       </ImageBackground>
       <View style={styles.detail}>
         <View style={styles.titleSection}>
           <View style={styles.titleContainer}>
-            <View>
-              <Text style={styles.title}>Bubur Mang</Text>
-              <StarRating />
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>{name}</Text>
+              <StarRating rate={rate} />
             </View>
-            <Counter />
+            <Counter counter={counter} setCounter={setCounter} />
           </View>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-            distinctio non, ducimus ex nostrum molestias dolorem nesciunt illo.
-            Aspernatur maxime eveniet harum? Animi, corporis. Cupiditate soluta
-            maxime sequi aliquid exercitationem.
-          </Text>
-          <Gap height={16} />
-          <Text style={styles.label}>Ingredients:</Text>
-          <Text style={styles.description}>Beras, Air, Kecap, Kacang</Text>
+          <ScrollView>
+            <Text style={styles.description}>{description}</Text>
+            <Gap height={16} />
+            <Text style={styles.label}>Ingredients:</Text>
+            <Text style={styles.description}>{ingredients}</Text>
+          </ScrollView>
         </View>
+
         <View style={styles.orderContainer}>
           <View style={styles.priceContainer}>
             <Text style={styles.description}>Total Price</Text>
-            <Text style={styles.totalPrice}>IDR 8.000</Text>
+            <Text style={styles.totalPrice}>
+              IDR {formatNumber(price * counter)}
+            </Text>
           </View>
           <View style={styles.buttonContainer}>
-            <Button
-              label="Order Now"
-              onPress={() => navigation.navigate('OrderSummary')}
-            />
+            <Button label="Order Now" onPress={onOrder} />
           </View>
         </View>
       </View>
@@ -78,7 +117,7 @@ const styles = StyleSheet.create({
   },
   back: {
     backgroundColor: 'grey',
-    opacity: 0.8,
+    opacity: 0.7,
     borderRadius: 999,
     width: 35,
     height: 35,
@@ -102,6 +141,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 14,
+  },
+  titleWrapper: {
+    flexShrink: 1,
   },
   title: {
     fontSize: 16,
