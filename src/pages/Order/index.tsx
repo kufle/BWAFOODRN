@@ -1,9 +1,19 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Header, OrderTabSection} from '../../components/molecules';
 import {colors} from '../../utils';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../store';
+import {fetchOrder} from '../../store/reducers/orderSlice';
 
 const Order = () => {
+  const {inProgress} = useSelector((state: RootState) => state.order);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchOrder('in_progress'));
+    dispatch(fetchOrder('past_orders'));
+  }, [dispatch]);
+  //console.log(inProgress);
   return (
     <View style={styles.pages}>
       {/* <EmptyOrder /> */}

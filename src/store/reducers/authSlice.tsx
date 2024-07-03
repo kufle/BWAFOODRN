@@ -103,6 +103,27 @@ export const logoutUser = createAsyncThunk(
   },
 );
 
+export const checkUser = createAsyncThunk(
+  'authSlice/checkUser',
+  async (_, {rejectWithValue}) => {
+    try {
+      const token = await getData('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      };
+      const result = await axios.get(`${API_URL}/api/profiles`, config);
+      return result.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({message: error.message});
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: 'authSlice',
   initialState: initialState,
@@ -131,6 +152,9 @@ const authSlice = createSlice({
         authSlice.caseReducers.reset(state);
       })
       .addCase(logoutUser.rejected, (state, action: any) => {
+        state.errors = action.payload || action.error.message;
+      })
+      .addCase(checkUser.rejected, (state, action: any) => {
         state.errors = action.payload || action.error.message;
       });
   },

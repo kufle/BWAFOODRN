@@ -1,16 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import WebView from 'react-native-webview';
 import {RouteProp} from '@react-navigation/native';
-import {Header, ItemListFood, ItemValue} from '../../components/molecules';
+import {useDispatch} from 'react-redux';
+import {
+  Header,
+  ItemListFood,
+  ItemValue,
+  Loading,
+} from '../../components/molecules';
 import {Button, Gap} from '../../components';
 import {colors, fonts, formatNumber} from '../../utils';
-import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../store';
-import { checkoutAction } from '../../store/reducers/checkOutSlice';
+import {checkoutAction} from '../../store/reducers/checkOutSlice';
 
 type RootStackParamList = {
   SuccessOrder: undefined;
+  MainApp: undefined;
 };
 
 type Props = {
@@ -19,26 +26,72 @@ type Props = {
 };
 
 const OrderSummary = ({navigation, route}: Props) => {
-  console.log(route.params);
+  //console.log(route.params);
   const {item, transaction, userProfile}: any = route.params;
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentURL, setPaymentURL] = useState('');
+
   const dispatch = useDispatch<AppDispatch>();
 
-  const onCheckout = () => {
-    const data = {
-      food_id: item.id,
-      user_id: userProfile.id,
-      quantity: transaction.totalItem,
-      total: transaction.total,
-      status: 'PENDING',
-    };
-    dispatch(checkoutAction(data));
+  const onCheckout = async () => {
+    try {
+      const data = {
+        food_id: item.id,
+        user_id: userProfile.id,
+        quantity: transaction.totalItem,
+        total: transaction.total,
+        status: 'PENDING',
+      };
+      const response = await dispatch(checkoutAction(data)).unwrap();
+      setPaymentURL(response.payment_url);
+      setIsPaymentOpen(true);
+    } catch (error) {
+      console.log('err', error);
+    }
     //navigation.navigate('SuccessOrder');
   };
+
+  const onNavChangeWeb = (state: any) => {
+    //console.log(state);
+    // const urlSuccess ='https://food.kame.my.id/success_order?order_id=15&status_code=200&transaction_status=settlement';
+    const titleWeb = 'Laravel';
+    if (state.title === titleWeb) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'SuccessOrder'}],
+      });
+    }
+  };
+
+  if (isPaymentOpen) {
+    return (
+      <>
+        <Header
+          title="Payment"
+          description="Order Summary"
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'MainApp', state: {routes: [{name: 'Order'}]}}],
+            })
+          }
+        />
+        <WebView
+          startInLoadingState={true}
+          renderLoading={() => <Loading />}
+          source={{
+            uri: paymentURL,
+          }}
+          onNavigationStateChange={onNavChangeWeb}
+        />
+      </>
+    );
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Header
-        title="Payment"
+        title="Order Summary"
         description="You deserve better meal"
         onPress={() => navigation.goBack()}
       />

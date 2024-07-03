@@ -1,10 +1,12 @@
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {FlatList, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import React, {useState} from 'react';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {colors, fonts} from '../../../utils';
 import ItemListFood from '../ItemListFood';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 type RootStackParamList = {
   OrderDetail: undefined;
@@ -13,42 +15,24 @@ type RootStackParamList = {
 const InProgress = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {inProgress}: any = useSelector((state: RootState) => state.order);
+  //console.log(inProgress.data);
   return (
     <View style={styles.container}>
-      <ItemListFood
-        type="in-progress"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="in-progress"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="in-progress"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="in-progress"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="in-progress"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
+      <FlatList
+        data={inProgress.data}
+        keyExtractor={(item: any) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        renderItem={({item}) => (
+          <ItemListFood
+            type="in-progress"
+            name={item.food.name}
+            price={item.total_format}
+            image={item.food.picture_url}
+            items={item.quantity}
+            onPress={() => navigation.navigate('OrderDetail', item)}
+          />
+        )}
       />
     </View>
   );
@@ -57,42 +41,23 @@ const InProgress = () => {
 const PastOrders = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {pastOrders}: any = useSelector((state: RootState) => state.order);
   return (
     <View style={styles.container}>
-      <ItemListFood
-        type="past-orders"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="past-orders"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="past-orders"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="past-orders"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
-      />
-      <ItemListFood
-        type="past-orders"
-        rating={5}
-        onPress={() => navigation.navigate('OrderDetail')}
-        items={4}
-        price="2000"
+      <FlatList
+        data={pastOrders.data}
+        keyExtractor={(item: any) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        renderItem={({item}) => (
+          <ItemListFood
+            type="past-orders"
+            name={item.food.name}
+            price={item.total_format}
+            image={item.food.picture_url}
+            items={item.quantity}
+            onPress={() => navigation.navigate('OrderDetail', item)}
+          />
+        )}
       />
     </View>
   );

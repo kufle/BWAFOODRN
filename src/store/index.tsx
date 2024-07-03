@@ -4,6 +4,7 @@ import authSlice from './reducers/authSlice';
 import globalSlice from './reducers/globalSlice';
 import homeSlice from './reducers/homeSlice';
 import checkOutSlice from './reducers/checkOutSlice';
+import orderSlice from './reducers/orderSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     global: globalSlice.reducer,
     home: homeSlice.reducer,
     checkout: checkOutSlice.reducer,
+    order: orderSlice.reducer,
   },
 });
 

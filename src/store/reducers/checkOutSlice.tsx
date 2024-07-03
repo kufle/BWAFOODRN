@@ -14,17 +14,20 @@ export const checkoutAction = createAsyncThunk(
     dispatch(showLoading(true));
     try {
       const token = await getData('token');
-      const response = axios.post(`${API_URL}/api/checkout`, payload, {
+      const config = {
         headers: {
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token?.value}`,
         },
-      });
-
-      console.log(response);
+      };
+      const rest = await axios.post(`${API_URL}/api/checkout`, payload, config);
       dispatch(showLoading(false));
-    } catch (error) {
+      return rest.data.data;
+    } catch (error: any) {
       dispatch(showLoading(false));
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({message: error.message});
     }
   },
 );
@@ -33,6 +36,11 @@ const checkOutSlice = createSlice({
   name: 'checkoutSlice',
   initialState: initialState,
   reducers: {},
+  extraReducers(builder) {
+    builder.addCase(checkoutAction.rejected, (state, action: any) => {
+      console.log('reject', action);
+    });
+  },
 });
 
 export default checkOutSlice;

@@ -1,9 +1,12 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Logo} from '../../assets';
-import {colors, fonts, getData} from '../../utils';
+import {colors, fonts} from '../../utils';
 import {Gap} from '../../components';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../store';
+import {checkUser} from '../../store/reducers/authSlice';
 
 type RootStackParamList = {
   SignIn: undefined;
@@ -15,23 +18,26 @@ type Props = {
 };
 
 const SplashScreen = ({navigation}: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-    setTimeout(() => {
-      getData('token').then(token => {
-        if (token) {
-          navigation.reset({index: 0, routes: [{name: 'MainApp'}]});
-        } else {
-          navigation.replace('SignIn');
-        }
-      });
-    }, 2000);
-  }, [navigation]);
+    const checkAuth = async () => {
+      try {
+        await dispatch(checkUser()).unwrap();
+        navigation.reset({index: 0, routes: [{name: 'MainApp'}]});
+      } catch (error) {
+        navigation.replace('SignIn');
+      }
+    };
+    checkAuth();
+  }, [dispatch, navigation]);
 
   return (
     <View style={styles.page}>
       <Logo />
       <Gap height={38} />
       <Text style={styles.title}>FoodMarket</Text>
+      <Text>Loading...</Text>
     </View>
   );
 };
