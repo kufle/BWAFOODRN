@@ -27,7 +27,7 @@ export const fetchOrder = createAsyncThunk(
     dispatch(showLoading(true));
     try {
       const token = await getData('token');
-      console.log(token);
+      //console.log(token);
       const config = {
         headers: {
           Authorization: `Bearer ${token?.value}`,
@@ -37,6 +37,35 @@ export const fetchOrder = createAsyncThunk(
         `${API_URL}/api/transactions?status=${status}&limit=0`,
         config,
       );
+      dispatch(showLoading(false));
+      return response.data;
+    } catch (error: any) {
+      dispatch(showLoading(false));
+      if (axios.isAxiosError(error) && error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({message: error.message});
+    }
+  },
+);
+
+export const cancelOrder = createAsyncThunk(
+  'orderSlice/cancelOrder',
+  async (payload: string | number, {dispatch, rejectWithValue}) => {
+    dispatch(showLoading(true));
+    try {
+      const token = await getData('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      };
+      const response = await axios.put(
+        `${API_URL}/api/transactions/${payload}`,
+        {status: 'CANCELLED'},
+        config,
+      );
+
       dispatch(showLoading(false));
       return response.data;
     } catch (error: any) {
@@ -65,6 +94,9 @@ const orderSlice = createSlice({
         }
       })
       .addCase(fetchOrder.rejected, (state, action) => {
+        console.log(action);
+      })
+      .addCase(cancelOrder.rejected, (state, action) => {
         console.log(action);
       });
   },

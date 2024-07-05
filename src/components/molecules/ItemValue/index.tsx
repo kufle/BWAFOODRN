@@ -4,7 +4,7 @@ import {colors, fonts} from '../../../utils';
 
 type Props = {
   label: string;
-  value: string;
+  value: string | number;
   valueColor?: string;
 };
 

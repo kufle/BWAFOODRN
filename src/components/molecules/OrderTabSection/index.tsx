@@ -1,12 +1,18 @@
-import {FlatList, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {colors, fonts} from '../../../utils';
 import ItemListFood from '../ItemListFood';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store';
 
 type RootStackParamList = {
   OrderDetail: undefined;
@@ -55,6 +61,8 @@ const PastOrders = () => {
             price={item.total_format}
             image={item.food.picture_url}
             items={item.quantity}
+            date={item.created_at}
+            status={item.status}
             onPress={() => navigation.navigate('OrderDetail', item)}
           />
         )}

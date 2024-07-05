@@ -1,21 +1,35 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {colors, fonts} from '../../utils';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {colors, fonts, getData} from '../../utils';
 import {ProfileTabSection} from '../../components/molecules';
 
 const Profile = () => {
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    getData('user').then(res => setProfile(res));
+  }, []);
+
+  console.log(profile);
   return (
     <View style={styles.pages}>
       <View style={styles.profile}>
         <View style={styles.photoContainer}>
           <View style={styles.photoWrapper}>
-            <View style={styles.photo}>
-              <Text style={styles.photoText}>Add Photo</Text>
-            </View>
+            {profile?.photoProfile ? (
+              <Image
+                source={{uri: profile.photoProfile}}
+                style={styles.photo}
+              />
+            ) : (
+              <View style={styles.photo}>
+                <Text style={styles.photoText}>Add Photo</Text>
+              </View>
+            )}
           </View>
         </View>
-        <Text style={styles.name}>Irawan</Text>
-        <Text style={styles.email}>irawan@mail.com</Text>
+        <Text style={styles.name}>{profile.name}</Text>
+        <Text style={styles.email}>{profile.email}</Text>
       </View>
       <View style={styles.content}>
         <ProfileTabSection />

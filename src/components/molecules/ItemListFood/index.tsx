@@ -3,6 +3,7 @@ import {
   ImageProps,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -28,9 +29,11 @@ type Props = {
   items?: number;
   price: string;
   image?: ImageProps;
+  date?: string | undefined;
+  status?: string | undefined;
 };
 
-const Food = ({type, name, rate = '0', items, price}: Props) => {
+const Food = ({type, name, rate = '0', items, price, date, status}: Props) => {
   switch (type) {
     case 'product':
       return (
@@ -71,8 +74,8 @@ const Food = ({type, name, rate = '0', items, price}: Props) => {
             </Text>
           </View>
           <View>
-            <Text style={styles.date}>28 Maret 2023</Text>
-            <Text style={styles.status}>Completed</Text>
+            <Text style={styles.date}>{date?.replace(' ', '\n')}</Text>
+            <Text style={statusStyle.status(status!)}>{status}</Text>
           </View>
         </>
       );
@@ -97,6 +100,8 @@ const ItemListFood = ({
   rate,
   items,
   price,
+  date,
+  status,
 }: Props) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
@@ -105,13 +110,32 @@ const ItemListFood = ({
           style={styles.image}
           source={image ? {uri: image} : FoodDummy1}
         />
-        <Food name={name} type={type} rate={rate} items={items} price={price} />
+        <Food
+          name={name}
+          type={type}
+          rate={rate}
+          items={items}
+          price={price}
+          date={date}
+          status={status}
+        />
       </View>
     </TouchableOpacity>
   );
 };
 
 export default ItemListFood;
+
+const textStatus = (type: string) => {
+  switch (type) {
+    case 'CANCELLED':
+      return colors.danger;
+    case 'SUCCESS':
+      return colors.green;
+    default:
+      return colors.primary;
+  }
+};
 
 const styles = StyleSheet.create({
   foodContainer: {
@@ -149,11 +173,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: fonts.primary.regular,
     color: colors.text.secondary,
-  },
-  status: {
-    fontSize: 10,
-    fontFamily: fonts.primary.regular,
-    color: colors.danger,
-    textAlign: 'center',
+    textAlign: 'right',
   },
 });
+
+const statusStyle = {
+  status: (status: string): TextStyle => ({
+    fontSize: 10,
+    fontFamily: fonts.primary.regular,
+    color: textStatus(status),
+    textAlign: 'center',
+  }),
+};

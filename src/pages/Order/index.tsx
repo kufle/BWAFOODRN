@@ -1,26 +1,33 @@
 import {StyleSheet, View} from 'react-native';
-import React, { useEffect } from 'react';
-import {Header, OrderTabSection} from '../../components/molecules';
+import React, {useEffect} from 'react';
+import {EmptyOrder, Header, OrderTabSection} from '../../components/molecules';
 import {colors} from '../../utils';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../store';
 import {fetchOrder} from '../../store/reducers/orderSlice';
 
 const Order = () => {
-  const {inProgress} = useSelector((state: RootState) => state.order);
+  const {inProgress, pastOrders}: any = useSelector(
+    (state: RootState) => state.order,
+  );
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(fetchOrder('in_progress'));
     dispatch(fetchOrder('past_orders'));
   }, [dispatch]);
-  //console.log(inProgress);
+
   return (
     <View style={styles.pages}>
-      {/* <EmptyOrder /> */}
-      <Header title="Your Orders" description="Wait for the best meal" />
-      <View style={styles.tabContainer}>
-        <OrderTabSection />
-      </View>
+      {inProgress?.data?.length >= 1 || pastOrders?.data?.length >= 1 ? (
+        <>
+          <Header title="Your Orders" description="Wait for the best meal" />
+          <View style={styles.tabContainer}>
+            <OrderTabSection />
+          </View>
+        </>
+      ) : (
+        <EmptyOrder />
+      )}
     </View>
   );
 };
